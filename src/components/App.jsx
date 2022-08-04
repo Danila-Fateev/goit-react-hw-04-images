@@ -139,7 +139,7 @@ export class App extends Component {
         {isLoading && <Loader />}
         {isModalOpen && (
           <Modal
-            picture={bigPicture}
+            bigPicture={bigPicture}
             closeModal={this.closeModal}
             onEscCloseModal={() => this.onEscCloseModal()}
           />
