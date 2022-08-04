@@ -104,6 +104,7 @@ export class App extends Component {
   };
 
   onEscCloseModal() {
+    const { isModalOpen } = this.state;
     const myFunction = e => {
       if (e.code === 'Escape') {
         this.setState({
@@ -113,7 +114,7 @@ export class App extends Component {
       }
     };
 
-    if ((this.state.isModalOpen = true)) {
+    if (isModalOpen) {
       window.addEventListener('keydown', myFunction);
     }
   }
