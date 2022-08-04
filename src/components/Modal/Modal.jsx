@@ -7,7 +7,7 @@ export default function Modal({ bigPicture, closeModal, onEscCloseModal }) {
   return (
     <div className="Overlay" onClick={closeModal}>
       <div className="Modal">
-        <img src={bigPicture} alt="large picture" />
+        <img src={bigPicture} alt="s" />
       </div>
     </div>
   );
