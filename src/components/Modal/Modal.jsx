@@ -1,20 +1,39 @@
 import '../styles.css';
 import PropTypes from 'prop-types';
+import { Component } from 'react';
 
-export default function Modal({ bigPicture, closeModal, onEscCloseModal }) {
-  onEscCloseModal();
+export default class Modal extends Component {
+  windowFunction = e => {
+    if (e.code === 'Escape') {
+      this.props.closeModal();
+    }
+  };
 
-  return (
-    <div className="Overlay" onClick={closeModal}>
-      <div className="Modal">
-        <img src={bigPicture} alt="s" />
+  onOverlayClickClose = e => {
+    if (e.currentTarget === e.target) {
+      this.props.closeModal();
+    }
+  };
+
+  componentDidMount() {
+    window.addEventListener('keydown', this.windowFunction);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.windowFunction);
+  }
+
+  render() {
+    return (
+      <div className="Overlay" onClick={this.onOverlayClickClose}>
+        <div className="Modal">
+          <img src={this.props.bigPicture} alt="s" />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 Modal.propTypes = {
   bigPicture: PropTypes.string.isRequired,
   closeModal: PropTypes.func.isRequired,
-  onEscCloseModal: PropTypes.func.isRequired,
 };

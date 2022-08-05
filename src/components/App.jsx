@@ -119,12 +119,10 @@ export class App extends Component {
     }
   }
 
-  closeModal = e => {
-    if (e.currentTarget === e.target) {
-      this.setState({
-        isModalOpen: false,
-      });
-    }
+  closeModal = () => {
+    this.setState({
+      isModalOpen: false,
+    });
   };
 
   render() {
@@ -145,11 +143,7 @@ export class App extends Component {
         {items.length > 0 && <Button loadMore={this.loadMore} />}
         {isLoading && <Loader />}
         {isModalOpen && (
-          <Modal
-            bigPicture={bigPicture}
-            closeModal={this.closeModal}
-            onEscCloseModal={() => this.onEscCloseModal()}
-          />
+          <Modal bigPicture={bigPicture} closeModal={this.closeModal} />
         )}
       </div>
     );
