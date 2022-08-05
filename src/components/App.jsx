@@ -134,7 +134,13 @@ export class App extends Component {
       <div>
         <Searchbar onSubmit={this.submitForm} />
         <ImageGallery>
-          <ImageGalleryItem items={items} openModal={this.openModal} />
+          {items.map(el => (
+            <ImageGalleryItem
+              key={el.itemId}
+              item={el}
+              openModal={this.openModal}
+            />
+          ))}
         </ImageGallery>
         {items.length > 0 && <Button loadMore={this.loadMore} />}
         {isLoading && <Loader />}

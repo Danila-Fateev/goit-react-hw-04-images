@@ -1,29 +1,23 @@
 import '../styles.css';
 import PropTypes from 'prop-types';
 
-export default function ImageGalleryItem({ items, openModal }) {
-  return items.map(el => (
-    <li
-      key={el.itemId}
-      className="ImageGalleryItem-item"
-      id={el.itemId}
-      onClick={openModal}
-    >
+export default function ImageGalleryItem({ item, openModal }) {
+  const { itemId, itemPicture } = item;
+  return (
+    <li className="ImageGalleryItem-item" id={itemId} onClick={openModal}>
       <img
-        src={el.itemPicture}
+        src={itemPicture}
         alt="itemPicture"
         className="ImageGalleryItem-image"
       />
     </li>
-  ));
+  );
 }
 
 ImageGalleryItem.propTypes = {
-  items: PropTypes.arrayOf(
-    PropTypes.shape({
-      itemId: PropTypes.number.isRequired,
-      itemPicture: PropTypes.string.isRequired,
-    })
-  ),
+  item: PropTypes.shape({
+    itemId: PropTypes.number.isRequired,
+    itemPicture: PropTypes.string.isRequired,
+  }),
   openModal: PropTypes.func.isRequired,
 };

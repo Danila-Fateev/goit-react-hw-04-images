@@ -6,5 +6,5 @@ export default function ImageGallery({ children }) {
 }
 
 ImageGallery.propTypes = {
-  children: PropTypes.object.isRequired,
+  children: PropTypes.arrayOf(PropTypes.object.isRequired),
 };
