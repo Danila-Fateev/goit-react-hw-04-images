@@ -14,6 +14,7 @@ export class App extends Component {
     searchWord: '',
     isModalOpen: false,
     bigPicture: '',
+    total: 0,
   };
 
   submitForm = async e => {
@@ -38,15 +39,16 @@ export class App extends Component {
 
           Promise.reject(new Error('error'));
         })
-        .then(r =>
-          r.hits.map(el => {
+        .then(r => {
+          this.setState({ total: r.total });
+          return r.hits.map(el => {
             const itemId = el.id;
             const itemPicture = el.webformatURL;
             const itemlargeImage = el.largeImageURL;
 
             return { itemId, itemPicture, itemlargeImage };
-          })
-        )
+          });
+        })
         .catch(error => console.log(error));
 
       this.setState({
@@ -110,7 +112,7 @@ export class App extends Component {
   };
 
   render() {
-    const { items, isLoading, isModalOpen, bigPicture } = this.state;
+    const { items, isLoading, isModalOpen, bigPicture, total } = this.state;
 
     return (
       <div>
@@ -124,7 +126,9 @@ export class App extends Component {
             />
           ))}
         </ImageGallery>
-        {items.length > 0 && <Button loadMore={this.loadMore} />}
+        {items.length > 0 && items.length !== total && (
+          <Button loadMore={this.loadMore} />
+        )}
         {isLoading && <Loader />}
         {isModalOpen && (
           <Modal bigPicture={bigPicture} closeModal={this.closeModal} />
