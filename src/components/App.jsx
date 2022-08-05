@@ -103,22 +103,6 @@ export class App extends Component {
     });
   };
 
-  onEscCloseModal() {
-    const { isModalOpen } = this.state;
-    const myFunction = e => {
-      if (e.code === 'Escape') {
-        this.setState({
-          isModalOpen: false,
-        });
-        window.removeEventListener('keydown', myFunction);
-      }
-    };
-
-    if (isModalOpen) {
-      window.addEventListener('keydown', myFunction);
-    }
-  }
-
   closeModal = () => {
     this.setState({
       isModalOpen: false,
