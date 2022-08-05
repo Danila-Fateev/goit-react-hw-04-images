@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Component } from 'react';
 
 export default class Modal extends Component {
-  windowFunction = e => {
+  onEscCloseModal = e => {
     if (e.code === 'Escape') {
       this.props.closeModal();
     }
@@ -16,10 +16,10 @@ export default class Modal extends Component {
   };
 
   componentDidMount() {
-    window.addEventListener('keydown', this.windowFunction);
+    window.addEventListener('keydown', this.onEscCloseModal);
   }
   componentWillUnmount() {
-    window.removeEventListener('keydown', this.windowFunction);
+    window.removeEventListener('keydown', this.onEscCloseModal);
   }
 
   render() {
