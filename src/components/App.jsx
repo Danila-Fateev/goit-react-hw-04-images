@@ -84,6 +84,7 @@ export class App extends Component {
     const chosenItem = this.state.items.find(
       el => el.itemId.toString() === e.currentTarget.id
     );
+
     this.setState({
       isModalOpen: true,
       bigPicture: chosenItem.itemlargeImage,
@@ -98,7 +99,6 @@ export class App extends Component {
 
   render() {
     const { items, isLoading, isModalOpen, bigPicture, total } = this.state;
-
     return (
       <div>
         <Searchbar onSubmit={this.submitForm} />
