@@ -17,7 +17,7 @@ export function App() {
 
   useEffect(() => {
     async function fetchData() {
-      if (!isLoading) setIsLoading(true);
+      setIsLoading(true);
       const moreItems = await fetch(
         `https://pixabay.com/api/?q=${searchWord}&page=${page}&key=27675022-eae91b965f306fbe1611b8e88&image_type=photo&orientation=horizontal&per_page=12`
       )
@@ -38,7 +38,7 @@ export function App() {
           });
         })
         .catch(error => console.log(error));
-      setItems([...items, ...moreItems]);
+      setItems(prevItems => [...prevItems, ...moreItems]);
       setIsLoading(false);
     }
     if (!searchWord) return;
