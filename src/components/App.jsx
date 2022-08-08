@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
@@ -6,25 +6,18 @@ import Button from './Button/Button';
 import Modal from './Modal/Modal';
 import Loader from './Loader/Loader';
 
-export class App extends Component {
-  state = {
-    page: null,
-    items: [],
-    isLoading: false,
-    searchWord: '',
-    isModalOpen: false,
-    bigPicture: '',
-    total: 0,
-  };
+export function App() {
+  const [page, setPage] = useState(null);
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchWord, setSearchword] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [bigPicture, setBigPicture] = useState('');
+  const [total, setTotal] = useState(0);
 
-  async componentDidUpdate(prevProps, prevState) {
-    const { searchWord, page, isLoading } = this.state;
-
-    if (prevState.searchWord !== searchWord || prevState.page !== page) {
-      if (!isLoading) {
-        this.setState({ isLoading: true });
-      }
-
+  useEffect(() => {
+    async function fetchData() {
+      if (!isLoading) setIsLoading(true);
       const moreItems = await fetch(
         `https://pixabay.com/api/?q=${searchWord}&page=${page}&key=27675022-eae91b965f306fbe1611b8e88&image_type=photo&orientation=horizontal&per_page=12`
       )
@@ -35,9 +28,7 @@ export class App extends Component {
           Promise.reject(new Error('error'));
         })
         .then(r => {
-          if (prevState.total !== r.total) {
-            this.setState({ total: r.total });
-          }
+          setTotal(r.total);
           return r.hits.map(el => {
             const itemId = el.id;
             const itemPicture = el.webformatURL;
@@ -47,78 +38,53 @@ export class App extends Component {
           });
         })
         .catch(error => console.log(error));
-      this.setState(prevState => {
-        return {
-          items: [...prevState.items, ...moreItems],
-          isLoading: false,
-        };
-      });
+      setItems([...items, ...moreItems]);
+      setIsLoading(false);
     }
-  }
-  submitForm = async e => {
+    if (!searchWord) return;
+    fetchData();
+  }, [page, searchWord]);
+
+  const submitForm = async e => {
     e.preventDefault();
     const inputValue = e.currentTarget.elements.formInput.value;
 
     if (inputValue) {
-      this.setState(prevState => {
-        if (prevState.searchWord !== inputValue) {
-          return {
-            page: 1,
-            searchWord: inputValue,
-            items: [],
-          };
-        }
-      });
+      setSearchword(inputValue);
+      setPage(1);
+      setItems([]);
     }
   };
 
-  loadMore = async e => {
-    this.setState(prevState => {
-      return {
-        page: prevState.page + 1,
-      };
-    });
+  const loadMore = () => {
+    setPage(page + 1);
   };
 
-  openModal = e => {
-    const chosenItem = this.state.items.find(
+  const openModal = e => {
+    const chosenItem = items.find(
       el => el.itemId.toString() === e.currentTarget.id
     );
-
-    this.setState({
-      isModalOpen: true,
-      bigPicture: chosenItem.itemlargeImage,
-    });
+    setIsModalOpen(true);
+    setBigPicture(chosenItem.itemlargeImage);
   };
 
-  closeModal = () => {
-    this.setState({
-      isModalOpen: false,
-    });
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
-  render() {
-    const { items, isLoading, isModalOpen, bigPicture, total } = this.state;
-    return (
-      <div>
-        <Searchbar onSubmit={this.submitForm} />
-        <ImageGallery>
-          {items.map(el => (
-            <ImageGalleryItem
-              key={el.itemId}
-              item={el}
-              openModal={this.openModal}
-            />
-          ))}
-        </ImageGallery>
-        {items.length > 0 && items.length !== total && (
-          <Button loadMore={this.loadMore} />
-        )}
-        {isLoading && <Loader />}
-        {isModalOpen && (
-          <Modal bigPicture={bigPicture} closeModal={this.closeModal} />
-        )}
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Searchbar onSubmit={submitForm} />
+      <ImageGallery>
+        {items.map(el => (
+          <ImageGalleryItem key={el.itemId} item={el} openModal={openModal} />
+        ))}
+      </ImageGallery>
+      {items.length > 0 && items.length !== total && (
+        <Button loadMore={loadMore} />
+      )}
+      {isLoading && <Loader />}
+      {isModalOpen && <Modal bigPicture={bigPicture} closeModal={closeModal} />}
+    </div>
+  );
 }
